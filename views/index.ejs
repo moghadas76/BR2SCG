@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <form id="User">
+        <label for="#userName">username:</label>
+        <input id="userName" type="text">
+        <input type="submit" value="Submit">
+      </form>
+    <script src="/javascripts/dist/socket.io.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script type="text/javascript">
+        var socket = io();
+        $("#User").submit(fu)
+      </script>
+  </body>
+</html>
