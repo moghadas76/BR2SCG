@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
-var http = require('http').Server(express);
+
 var socket = require('socket.io')
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -59,18 +59,25 @@ io.on("connection",function(socket){
     io.sockets.emit("chat_enable");
 
     socket.on('chat message', function(data){
+      console.log("DATA=",data);
       io.sockets.emit('chat message', data);
     });
 
     var qst = 0;
-    setInterval(function(){
+    var next_question = setInterval(function(){
       io.sockets.emit('next_question',questions[qst]);
       qst+=1;
+      if(qst===3){
+        setTimeout(function(){
+          clearInterval(next_question);
+          io.sockets.emit("end",{msg:"Kose Ammat"})        
+        },10000)
+      }
     },10000);
-
-  
+        
   }
   socket.on('disconnect', function(){
+    io.sockets.emit('disconnect');
     console.log('user disconnected');
     clients.pop();
   });
