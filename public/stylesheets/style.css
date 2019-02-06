@@ -6,3 +6,24 @@ body {
 a {
   color: #00B7FF;
 }
+<<<<<<< HEAD
+=======
+
+.chat_box{
+  border: 1px solid #005354;
+  border-radius: 20px;
+  margin-left: 100px;
+  padding: 10px 10px 10px 10px;
+  width: fit-content ;
+}
+
+.chat{
+  border: 1px solid #005354;
+
+  background-color: azure;
+  margin-left: 100px;
+  padding: 10px 10px 10px 10px;
+  width: 500px ;
+  margin: 5% 5%;
+}
+>>>>>>> Update #1

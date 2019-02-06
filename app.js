@@ -25,7 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/playGame',gameRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,30 +42,38 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-
-
 var server = app.listen(3000,function(){
-    console.log("Server is running...");
-});
+  console.log("Server is running...!!!");
+})
 
+var questions = [{q:"Iranian soccer player in world cup 2017?",c1:"Sardar Azmoon",c2:"Ali Amadi",c3:"Khashaqchi",c4:"hichkodam",ans:"1"},{q:"Khashaqchi chand noghte darad?",c1:"7",c2:"8",c3:"9",c4:"10",ans:"3"},{q:"Sazandeye kelashinkof?",c1:"Ali Amadi",c2:"kelashinkof",c3:"Esna",c4:"Khasteh",ans:"2"}]
 
-
-//TODO: Complete real time part....
-clients = {}
-
+clients = []
+scores = [0,0]
 var io = socket(server);
 
-io.on('connection', function(socket){
-    
-    socket.on("add-user",function(data){
-        clients[data.userName] = {
-            socket: socket.id;
-        }
-        console.log(clients);
-    })
-});
+io.on("connection",function(socket){
+  clients.push(socket.id);
+  if(clients.length==2){
+    console.log("Game can be start....");
+    io.sockets.emit("chat_enable");
 
+    socket.on('chat message', function(data){
+      io.sockets.emit('chat message', data);
+    });
 
+    var qst = 0;
+    setInterval(function(){
+      io.sockets.emit('next_question',questions[qst]);
+      qst+=1;
+    },10000);
+
+  
+  }
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+    clients.pop();
+  });
+})
 
 module.exports = app;

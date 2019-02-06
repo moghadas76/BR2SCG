@@ -2,6 +2,7 @@
 <html>
   <head>
     <title><%= title %></title>
+
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
@@ -18,5 +19,97 @@
         var socket = io();
         $("#User").submit(fu)
       </script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  </head>
+  <body>
+    <div id="game_board"  style="display: none;">
+        <div>
+          <h1  id="question">Qustion...</h1>
+        </div>
+        <div>
+            <h1 id="c1">C1</h1>
+          </div>
+        <div>
+            <h1 id="c2">C2</h1>
+        </div>
+        <div>
+            <h1 id="c3">C3</h1>
+
+        </div>
+        <div>
+            <h1 id="c4">C4</h1>
+          </div>
+        <input type="submit" name="" id="" value="submit">
+    </div>
+     <!-- Right aligned menu below button -->
+    <div id="chatRoom" style="display: none;">  
+      <ul class="chat" id="chat">
+        <pre>no message...</pre> 
+      </ul>
+
+      <form action="#" class="chat_box" id="foo">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="sample1">
+            <label class="mdl-textfield__label" for="sample1">handle</label>
+          </div>
+          <br>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" id="addr1">
+              <label class="mdl-textfield__label" for="addr1">message</label>
+            </div>
+            <input class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" type="submit" value="Send">
+        </form>
+      </div>
+    <script src="/javascripts/dist/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
+      $(function () {
+      var socket = io();
+      $("#foo").submit(function(e){
+        e.preventDefault();
+        console.log($("#chat").text());
+        if( $("#chat").text().trim()==="no message...")
+          $("#chat").text("");
+          socket.emit('chat message',{handle:$("#sample1").val(),message:$("#addr1").val()} );
+          // $("#sample1").val(null);
+          $("#addr1").val(null);
+        return false;
+      });
+      
+      socket.on('chat_enable',function(){
+        alert("Room generated....chat module enable...")
+        setTimeout(() => {
+          $("#chatRoom").attr("style","display:inherite");
+          $("#game_board").attr("style","display:inherite");
+        }, 5000);
+      })
+      
+      var ans;
+      socket.on('next_question',function(data){
+        $("#question").text(data.q);
+        $("#c1").text(data.c1);
+        $("#c2").text(data.c2);
+        $("#c3").text(data.c3);
+        $("#c4").text(data.c4);
+        ans = data.ans;
+      })
+
+
+      socket.on('chat message',function(data){
+        if( $("#chat").text().trim()==="no message...")
+          $("#chat").text("");
+
+        console.log(data);
+        $("#chat").append($("<li>", {
+    "text": data.handle +" : "+data.message
+  }));
+ });
+      })
+    </script>
+
   </body>
 </html>
